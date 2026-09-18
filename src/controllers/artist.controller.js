@@ -11,7 +11,7 @@ if(!token){
 }
 
 try {
-    let decodedToken = jwt.verify(token,process.env.JWT_SECRET)
+    const decodedToken = jwt.verify(token,process.env.JWT_SECRET)
 if (decodedToken.role !== "artist"){
     return res.status(403).json({message:"Forbidden: Only artists can create songs"})
 }
@@ -21,7 +21,7 @@ if (decodedToken.role !== "artist"){
     const file = req.file
 
     const result = await uploadFile(file)
-   
+
     const song = await artistModel.create({
         uri: result.url,
         title,
@@ -39,6 +39,5 @@ if (decodedToken.role !== "artist"){
     return res.status(401).json({message:"Invalid token"})
 }
 }
-
 
 module.exports = {createSong}
