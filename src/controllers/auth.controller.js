@@ -33,6 +33,7 @@ const token = jwt.sign(
     {
         Id : user._id,
         email : user.email,
+        role : user.role,
     },process.env.JWT_SECRET
 )
 res.cookie("token",token)
@@ -66,6 +67,7 @@ async function loginUser(req, res) {
         {
             Id : user._id,
             email : user.email,
+            role : user.role,
         },process.env.JWT_SECRET
     )
     res.cookie("token",token)
