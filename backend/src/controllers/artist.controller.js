@@ -16,14 +16,14 @@ if (decodedToken.role !== "artist"){
     return res.status(403).json({message:"Forbidden: Only artists can create songs"})
 }
 
-
-    const title = req.body.title
     const file = req.file
+    const title = req.body.title
+    
 
     const result = await uploadFile(file)
 
     const song = await artistModel.create({
-        uri: result.url,
+        uri: result.url,    
         title,
         artist: decodedToken.Id
     })
