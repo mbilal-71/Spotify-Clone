@@ -1,20 +1,9 @@
-const artistModel = require("../models/artist.model")
+const songModel = require("../models/artist.model")
 const jwt = require("jsonwebtoken")
 const uploadFile = require("../services/storage.service")
-
+const albumModel = require("../models/album.model")
 
 async function createSong(req,res){
-
-const token = req.cookies.token
-if(!token){
-    return res.status(401).json({message:"Unauthorized"})
-}
-
-try {
-    const decodedToken = jwt.verify(token,process.env.JWT_SECRET)
-if (decodedToken.role !== "artist"){
-    return res.status(403).json({message:"Forbidden: Only artists can create songs"})
-}
 
     const file = req.file
     const title = req.body.title
@@ -22,10 +11,10 @@ if (decodedToken.role !== "artist"){
 
     const result = await uploadFile(file)
 
-    const song = await artistModel.create({
+    const song = await songModel.create({
         uri: result.url,    
         title,
-        artist: decodedToken.Id
+        artist: req.user.Id
     })
     res.status(201).json({message:"Song created successfully",song:{
         id:song._id,
@@ -34,10 +23,27 @@ if (decodedToken.role !== "artist"){
         artist:song.artist
     }
 })
-
-}catch(error){
-    return res.status(401).json({message:"Invalid token"})
-}
 }
 
-module.exports = {createSong}
+
+async function createAlbum(req,res){
+
+
+    const {title,songId} = req.body
+    
+    const album = await albumModel.create({
+        title,
+        songs: songId,
+        artist: req.user.Id
+    })
+    res.status(201).json({message:"Album created successfully",album:{
+        id:album._id,
+        title:album.title,
+        songs:album.songs,
+        artist:album.artist
+    }})
+
+}
+
+
+module.exports = {createSong,createAlbum}

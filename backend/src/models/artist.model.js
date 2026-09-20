@@ -15,6 +15,6 @@ const artistSchema = new mongoose.Schema({
     }
 })
 
-const artistModel = mongoose.model("artist",artistSchema)
+const songModel = mongoose.model("song",artistSchema)
 
-module.exports = artistModel
+module.exports = songModel
